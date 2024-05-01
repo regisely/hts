@@ -37,7 +37,7 @@ LU <- function(fcasts, S, weights, allow.changes = FALSE) {
     weights <- weights[pvec, pvec]
     fcasts <- fcasts[pvec, ]
     utmat <- cbind2(sparseMatrix(i = seqagg, j = seqagg, x = 1), 
-                    -1 * as(t(S[1L:nagg, ]), "sparseMatrix"))
+                    -1 * as(t(S2[1L:nagg, ]), "sparseMatrix"))
   }
   jmat <- sparseMatrix(i = 1L:nbts, j = (nagg + 1L):nts, x = rep(1L, nbts),
                        dims = c(nbts, nts))
@@ -70,7 +70,7 @@ CG <- function(fcasts, S, weights, allow.changes = FALSE) {
   seqagg <- 1L:nagg
   if (!allow.changes) {
     utmat <- cbind2(Matrix::sparseMatrix(i = seqagg, j = seqagg, x = 1),
-                    -1 * S[1L:nagg, ])
+                    -1 * as(t(S[1L:nagg, ]), "sparseMatrix"))
   } else {
     # Identifying rows with one 1 element to make the Identity matrix in S
     indx <- rowSums(S)
@@ -82,7 +82,7 @@ CG <- function(fcasts, S, weights, allow.changes = FALSE) {
     weights <- weights[pvec, pvec]
     fcasts <- fcasts[pvec, ]
     utmat <- cbind2(Matrix::sparseMatrix(i = seqagg, j = seqagg, x = 1), 
-                    -1 * S2[1L:nagg, ])
+                    -1 * as(t(S2[1L:nagg, ]), "sparseMatrix"))
   }
   jmat <- Matrix::sparseMatrix(i = 1L:nbts, j = (nagg + 1L):nts, x = rep(1L, nbts),
                        dims = c(nbts, nts))
@@ -113,7 +113,7 @@ CHOL <- function(fcasts, S, weights, allow.changes = FALSE) {
   nagg <- nts - nbts
   seqagg <- 1L:nagg
   if (!allow.changes) {
-    utmat <- cbind(methods::as(nagg, "matrix.diag.csr"), -1 * S[1L:nagg, ])
+    utmat <- cbind(methods::as(nagg, "matrix.diag.csr"), -1 * as(t(S[1L:nagg, ]), "sparseMatrix"))
   } else {
     # Identifying rows with one 1 element to make the Identity matrix in S
     Sm <- as(S, "dgCMatrix")
@@ -125,7 +125,7 @@ CHOL <- function(fcasts, S, weights, allow.changes = FALSE) {
     S2 <- S[pvec, ]
     weights <- weights[pvec, pvec]
     fcasts <- fcasts[pvec, ]
-    utmat <- cbind(methods::as(nagg, "matrix.diag.csr"), -1 * S2[1L:nagg, ])
+    utmat <- cbind(methods::as(nagg, "matrix.diag.csr"), -1 * as(t(S2[1L:nagg, ]), "sparseMatrix"))
   }
   jmat <- methods::new("matrix.csr", ra = rep(1L, nbts), ja = seq((nagg + 1L), nts),
               ia = 1L:(nbts + 1L), dimension = as.integer(c(nbts, nts)))
