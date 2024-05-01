@@ -25,7 +25,7 @@ LU <- function(fcasts, S, weights, allow.changes = FALSE) {
   
   if (!allow.changes) {
     utmat <- cbind2(sparseMatrix(i = seqagg, j = seqagg, x = 1),
-                    -1 * S[1L:nagg, ])
+                    -1 * as(t(S[1L:nagg, ]), "sparseMatrix"))
   } else {
     # Identifying rows with one 1 element to make the Identity matrix in S
     indx <- rowSums(S)
@@ -37,7 +37,7 @@ LU <- function(fcasts, S, weights, allow.changes = FALSE) {
     weights <- weights[pvec, pvec]
     fcasts <- fcasts[pvec, ]
     utmat <- cbind2(sparseMatrix(i = seqagg, j = seqagg, x = 1), 
-                    -1 * as(t(S[1L, ]), "sparseMatrix"))
+                    -1 * as(t(S[1L:nagg, ]), "sparseMatrix"))
   }
   jmat <- sparseMatrix(i = 1L:nbts, j = (nagg + 1L):nts, x = rep(1L, nbts),
                        dims = c(nbts, nts))
