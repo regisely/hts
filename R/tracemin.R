@@ -37,7 +37,7 @@ LU <- function(fcasts, S, weights, allow.changes = FALSE) {
     weights <- weights[pvec, pvec]
     fcasts <- fcasts[pvec, ]
     utmat <- cbind2(sparseMatrix(i = seqagg, j = seqagg, x = 1), 
-                    -1 * S2[1L:nagg, ])
+                    -1 * as(t(S[1L, ]), "sparseMatrix"))
   }
   jmat <- sparseMatrix(i = 1L:nbts, j = (nagg + 1L):nts, x = rep(1L, nbts),
                        dims = c(nbts, nts))
